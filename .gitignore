@@ -1,1 +1,13 @@
-docs/
+# Vagrant
+.vagrant/
+*.log
+
+# IDE / Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# macOS
+.DS_Store
