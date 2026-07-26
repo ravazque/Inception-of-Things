@@ -144,29 +144,3 @@ download it again. To free that space too:
 ```bash
 docker rmi gitlab/gitlab-ce:latest
 ```
-
-## Files
-
-```
-bonus/
-├── scripts/
-│   ├── install.sh              # entry point: cluster, namespaces, then the two below
-│   ├── gitlab.sh               # deploy GitLab, create the project, push the manifests
-│   └── argocd.sh               # install Argo CD and point it at the local GitLab
-└── confs/
-    ├── gitlab.yaml             # namespace, root Secret, PVCs, Deployment, Service
-    ├── application.yaml        # Argo CD Application: source is the in-cluster GitLab
-    └── manifests/              # pushed into the GitLab project, watched by Argo CD
-        ├── deployment.yaml
-        └── service.yaml
-```
-
-## Troubleshooting
-
-| Symptom | Cause and fix |
-|---------|---------------|
-| GitLab pod `Pending` | Not enough RAM or disk on the node; free memory and retry |
-| GitLab restarts in a loop | First boot is slow; check `kubectl -n gitlab logs deploy/gitlab` |
-| `rollout status` times out | Raise the timeout or wait: the first boot can exceed 20 min |
-| Argo CD cannot read the repo | The project must be public; check `kubectl -n gitlab get pods` first |
-| `git push` refused | The port-forward died; relaunch it and repeat |

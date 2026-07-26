@@ -119,26 +119,3 @@ k3d cluster start iot     # bring it back
 ```bash
 k3d cluster delete iot
 ```
-
-## Files
-
-```
-p3/
-├── scripts/
-│   └── install.sh              # k3d cluster + namespaces + Argo CD + Application
-└── confs/
-    ├── application.yaml        # Argo CD Application: repository, path, destination
-    └── manifests/              # what Argo CD deploys (the watched path)
-        ├── deployment.yaml     # wil42/playground, the image tag lives here
-        └── service.yaml        # exposes port 8888 inside the cluster
-```
-
-## Troubleshooting
-
-| Symptom | Cause and fix |
-|---------|---------------|
-| `install.sh` stops on Docker | Daemon not running, or the user is not in the `docker` group |
-| Application stays `Unknown` | Wrong repository or `path` in `application.yaml`, or the repo is private |
-| Application `OutOfSync` for minutes | Auto-sync polls every ~3 min; force it with the `patch` command above |
-| `port-forward` refuses | The pod is not `Running` yet: `kubectl get pods -n dev` |
-| `k3d: command not found` | Add `~/.local/bin` to your `PATH` |

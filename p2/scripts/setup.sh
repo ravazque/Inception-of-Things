@@ -20,8 +20,11 @@ export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
 grep -q 'KUBECONFIG' /home/vagrant/.bashrc || \
   echo 'export KUBECONFIG=/etc/rancher/k3s/k3s.yaml' >> /home/vagrant/.bashrc
 
+# The API server answers a few seconds before the node registers itself, and
+# "kubectl wait node --all" fails outright when there is no node yet, so wait
+# for the object to exist before waiting on its condition.
 echo "Waiting for the API server..."
-until kubectl get nodes >/dev/null 2>&1; do sleep 3; done
+until kubectl get nodes --no-headers 2>/dev/null | grep -q .; do sleep 3; done
 kubectl wait --for=condition=Ready node --all --timeout=180s
 
 # -R walks the uploaded directory, so the manifests are found no matter how

@@ -36,7 +36,11 @@ then just run `vagrant up`.
 ## Start
 
 ```bash
-vagrant up --provider=libvirt        # or --provider=virtualbox
+vagrant up --provider=libvirt
+```
+
+```bash
+vagrant up --provider=virtualbox
 ```
 
 The first run downloads the box and takes a few minutes. Later runs are much
@@ -59,10 +63,15 @@ vagrant ssh ravazqueSW
 Expected output of the first command:
 
 ```
-NAME         STATUS   ROLES                  AGE   VERSION
-ravazqueS    Ready    control-plane,master   2m    v1.xx.x+k3s1
-ravazqueSW   Ready    <none>                 1m    v1.xx.x+k3s1
+NAME         STATUS   ROLES           AGE   VERSION        INTERNAL-IP
+ravazques    Ready    control-plane   2m    v1.xx.x+k3s1   192.168.56.110
+ravazquesw   Ready    <none>          1m    v1.xx.x+k3s1   192.168.56.111
 ```
+
+Node names appear in lowercase because Kubernetes normalises them to DNS
+labels. The machine hostnames themselves keep the capital letters — check with
+`vagrant ssh ravazqueS -c hostname`. A worker showing `<none>` under ROLES is
+also normal: only the control-plane carries a role label.
 
 Both services can be inspected from inside the machines:
 
@@ -87,22 +96,3 @@ Removes the machines completely:
 ```bash
 vagrant destroy -f
 ```
-
-## Files
-
-```
-p1/
-├── Vagrantfile             # the two machines, their IPs, resources and providers
-└── scripts/
-    ├── server.sh           # installs K3s in server mode on ravazqueS
-    └── worker.sh           # installs K3s in agent mode and joins ravazqueS
-```
-
-## Troubleshooting
-
-| Symptom | Cause and fix |
-|---------|---------------|
-| The worker never becomes `Ready` | Check `sudo journalctl -u k3s-agent -f` on `ravazqueSW`: usually the server is unreachable |
-| `kubectl` says connection refused | K3s is still starting: `sudo systemctl status k3s` |
-| `vagrant up` cannot find a provider | Install the `vagrant-libvirt` plugin, or use `--provider=virtualbox` |
-| The IP is already taken | Another VM is using `192.168.56.110`; run `vagrant global-status --prune` and destroy it |

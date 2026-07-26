@@ -206,7 +206,7 @@ Inception_of_Things/
     │   ├── gitlab.sh               # deploy GitLab, create the project, push manifests
     │   └── argocd.sh               # install Argo CD + Application (GitLab source)
     └── confs/
-        ├── gitlab.yaml             # Secret + PVCs + Deployment + Service for GitLab CE
+        ├── gitlab.yaml             # root Secret + PVCs + Deployment + Service (GitLab CE)
         ├── application.yaml        # Argo CD Application (local GitLab source)
         └── manifests/              # pushed into the GitLab project
             ├── deployment.yaml

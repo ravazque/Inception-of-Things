@@ -37,7 +37,11 @@ Vagrant plus one provider. The `Vagrantfile` declares both:
 ## Start
 
 ```bash
-vagrant up --provider=libvirt        # or --provider=virtualbox
+vagrant up --provider=libvirt
+```
+
+```bash
+vagrant up --provider=virtualbox
 ```
 
 The provisioning uploads `confs/` into the machine, installs K3s, applies the
@@ -89,26 +93,3 @@ vagrant up        # bring it back, no reprovisioning
 ```bash
 vagrant destroy -f
 ```
-
-## Files
-
-```
-p2/
-├── Vagrantfile             # the machine, its IP, resources and providers
-├── scripts/
-│   └── setup.sh            # installs K3s and applies everything in confs/
-└── confs/
-    ├── app1.yaml           # ConfigMap + Deployment (1 replica) + Service
-    ├── app2.yaml           # ConfigMap + Deployment (3 replicas) + Service
-    ├── app3.yaml           # ConfigMap + Deployment (1 replica) + Service
-    └── ingress.yaml        # host rules for app1/app2 + a hostless default rule
-```
-
-## Troubleshooting
-
-| Symptom | Cause and fix |
-|---------|---------------|
-| `404 page not found` | The `Host` header matches no rule and the hostless rule is missing |
-| `502` / `503` | The pods are not `Ready` yet: `kubectl get pods` |
-| `curl` times out | The machine is down or Traefik is still starting: `kubectl -n kube-system get pods` |
-| `app2` shows fewer than 3 pods | Not enough memory on the node: `kubectl describe pod <name>` |
