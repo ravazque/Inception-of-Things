@@ -1,4 +1,4 @@
-*This project has been created as part of the 42 curriculum by ravazque, luferna3 and jorbarro.*
+*Created by ravazque, luferna3 and jorbarro.*
 
 ---
 

@@ -2,8 +2,8 @@
 
 ## 📖 About
 
-"Inception of Things" (IoT) is a System Administration / DevOps project at
-42 Madrid: a hands-on introduction to **Kubernetes**. It goes from
+"Inception of Things" (IoT) is a System Administration / DevOps project: a
+hands-on introduction to **Kubernetes**. It goes from
 provisioning reproducible virtual machines with **Vagrant** all the way to a
 complete **GitOps** pipeline, using **K3s**, **K3d** and **Argo CD**, plus a
 local **GitLab** in the bonus.
@@ -126,7 +126,7 @@ Each folder has a `README.md` with the full start / test / stop / destroy flow.
 
 | Tool | Needed for | Installed by hand? |
 |------|------------|--------------------|
-| Vagrant + a provider | Parts 1 and 2 | Yes — libvirt/KVM (Linux) or VirtualBox (42 campus) |
+| Vagrant + a provider | Parts 1 and 2 | Yes — libvirt/KVM or VirtualBox |
 | Docker | Part 3 and the bonus | Yes — the daemon must be running |
 | kubectl, k3d, argocd | Part 3 and the bonus | No — the scripts drop them into `~/.local/bin` |
 | git | Pushing the tag change in Part 3 | Usually already present |
@@ -136,7 +136,7 @@ Each folder has a `README.md` with the full start / test / stop / destroy flow.
 ```bash
 # Linux (native KVM):
 vagrant up --provider=libvirt
-# Campus Ubuntu machines:
+# Ubuntu hosts with VirtualBox:
 vagrant up --provider=virtualbox
 # Or make it the default:
 export VAGRANT_DEFAULT_PROVIDER=libvirt
@@ -173,14 +173,12 @@ Inception_of_Things/
 ├── .gitignore
 │
 ├── docs/
-│   └── README.md                   # Simple project documentation (42)
-│
+│   └── README.md                   # Simple project documentation
 ├── p1/                             # Part 1 — K3s + Vagrant (2 nodes)
 │   ├── Vagrantfile                 # ravazqueS (.110) + ravazqueSW (.111)
 │   └── scripts/
 │       ├── server.sh               # install K3s in server (control-plane) mode
 │       └── worker.sh               # install K3s agent and join the server
-│
 ├── p2/                             # Part 2 — K3s + 3 apps + Ingress
 │   ├── Vagrantfile                 # ravazqueS (.110)
 │   ├── scripts/
@@ -190,7 +188,6 @@ Inception_of_Things/
 │       ├── app2.yaml               # app2 (3 replicas)
 │       ├── app3.yaml               # app3 (default backend)
 │       └── ingress.yaml            # Host-based routing (Traefik)
-│
 ├── p3/                             # Part 3 — K3d + Argo CD (GitOps)
 │   ├── scripts/
 │   │   └── install.sh              # k3d cluster + namespaces + Argo CD + Application
@@ -199,7 +196,6 @@ Inception_of_Things/
 │       └── manifests/              # what Argo CD deploys (the watched path)
 │           ├── deployment.yaml     # wil42/playground — the image tag lives here
 │           └── service.yaml        # port 8888 inside the cluster
-│
 └── bonus/                          # Bonus — local GitLab
     ├── scripts/
     │   ├── install.sh              # tools + k3d cluster + namespaces

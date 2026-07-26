@@ -1,4 +1,4 @@
-# app2 - three replicas (required by the subject). Host header "app2.com".
+# app2 - three replicas. Reached through the Host header "app2.com".
 apiVersion: v1
 kind: ConfigMap
 metadata:

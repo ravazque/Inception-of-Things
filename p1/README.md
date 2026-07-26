@@ -35,9 +35,13 @@ then just run `vagrant up`.
 
 ## Start
 
+**CachyOS:**
+
 ```bash
 vagrant up --provider=libvirt
 ```
+
+**Ubuntu:**
 
 ```bash
 vagrant up --provider=virtualbox
@@ -52,7 +56,7 @@ faster.
 # Both nodes Ready, one control-plane and one worker:
 vagrant ssh ravazqueS -c "kubectl get nodes -o wide"
 
-# The private IPs are the ones the subject asks for:
+# The private IPs assigned in the Vagrantfile:
 vagrant ssh ravazqueS  -c "ip -4 addr show | grep 192.168.56"
 vagrant ssh ravazqueSW -c "ip -4 addr show | grep 192.168.56"
 
