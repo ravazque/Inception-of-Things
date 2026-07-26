@@ -1,0 +1,56 @@
+# app1 - single replica. Reached through the Host header "app1.com".
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app1-nginx
+data:
+  # $hostname is the pod name, so every reply says which pod answered.
+  default.conf: |
+    server {
+        listen 80;
+        server_name _;
+        location / {
+            default_type text/html;
+            return 200 "<!DOCTYPE html><html><body><h1>Hello from app1</h1><p>pod: $hostname</p></body></html>";
+        }
+    }
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app1
+  labels:
+    app: app1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: app1
+  template:
+    metadata:
+      labels:
+        app: app1
+    spec:
+      containers:
+        - name: app1
+          image: nginx:1.27-alpine
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - name: conf
+              mountPath: /etc/nginx/conf.d
+      volumes:
+        - name: conf
+          configMap:
+            name: app1-nginx
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: app1
+spec:
+  selector:
+    app: app1
+  ports:
+    - port: 80
+      targetPort: 80

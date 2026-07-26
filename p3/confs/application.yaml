@@ -1,0 +1,25 @@
+# Argo CD Application - applied to the local cluster, never pushed to Git.
+# It tells Argo CD which repository and path to watch, and where to deploy.
+# Changing the image tag under that path is what triggers a redeploy.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: playground
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/ravazque/Inception-of-Things.git
+    targetRevision: HEAD
+    path: p3/confs/manifests
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: dev
+  syncPolicy:
+    automated:
+      # prune: remove cluster objects that were deleted from Git.
+      prune: true
+      # selfHeal: revert changes made directly on the cluster.
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

@@ -1,6 +1,17 @@
 # Vagrant
 .vagrant/
+*.box
 *.log
+
+# Kubernetes / cluster credentials
+kubeconfig
+kubeconfig*.yaml
+*.kubeconfig
+.kube/
+
+# Local secrets and overrides
+.env
+*.local
 
 # IDE / Editor
 .vscode/
@@ -9,5 +20,6 @@
 *.swo
 *~
 
-# macOS
+# OS
 .DS_Store
+Thumbs.db

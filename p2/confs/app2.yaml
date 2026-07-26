@@ -1,0 +1,57 @@
+# app2 - three replicas (required by the subject). Host header "app2.com".
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app2-nginx
+data:
+  # $hostname is the pod name: repeat the curl and the Service rotates between
+  # the three replicas, which proves the load balancing.
+  default.conf: |
+    server {
+        listen 80;
+        server_name _;
+        location / {
+            default_type text/html;
+            return 200 "<!DOCTYPE html><html><body><h1>Hello from app2</h1><p>pod: $hostname</p></body></html>";
+        }
+    }
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app2
+  labels:
+    app: app2
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: app2
+  template:
+    metadata:
+      labels:
+        app: app2
+    spec:
+      containers:
+        - name: app2
+          image: nginx:1.27-alpine
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - name: conf
+              mountPath: /etc/nginx/conf.d
+      volumes:
+        - name: conf
+          configMap:
+            name: app2-nginx
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: app2
+spec:
+  selector:
+    app: app2
+  ports:
+    - port: 80
+      targetPort: 80

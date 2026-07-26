@@ -1,0 +1,143 @@
+# Local GitLab CE, from the official omnibus image published by GitLab.
+# One pod in the "gitlab" namespace runs the whole stack (nginx, workhorse,
+# puma, sidekiq, gitaly, postgresql, redis) supervised inside the container.
+#
+# In-cluster URL: http://gitlab.gitlab.svc.cluster.local
+# That is exactly the URL Argo CD clones from, so no host mismatch is possible.
+apiVersion: v1
+kind: Secret
+metadata:
+  name: gitlab-root
+  namespace: gitlab
+type: Opaque
+stringData:
+  # Initial password of the "root" user. Lab credentials: GitLab is only
+  # reachable inside the cluster and through kubectl port-forward.
+  password: "Iot-Kubernetes-2026"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: gitlab-config
+  namespace: gitlab
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: gitlab-data
+  namespace: gitlab
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 12Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gitlab
+  namespace: gitlab
+  labels:
+    app: gitlab
+spec:
+  replicas: 1
+  # The volumes are single-writer, so never run two pods at once.
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: gitlab
+  template:
+    metadata:
+      labels:
+        app: gitlab
+    spec:
+      containers:
+        - name: gitlab
+          image: gitlab/gitlab-ce:latest
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: GITLAB_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: gitlab-root
+                  key: password
+            - name: GITLAB_OMNIBUS_CONFIG
+              value: |
+                external_url 'http://gitlab.gitlab.svc.cluster.local'
+                nginx['listen_port'] = 80
+                nginx['listen_https'] = false
+                # Kubernetes probes come from the node IP, not from localhost,
+                # and /-/health is restricted to localhost by default.
+                gitlab_rails['monitoring_whitelist'] = ['0.0.0.0/0']
+                # Trim the stack to what a single-node lab needs.
+                prometheus_monitoring['enable'] = false
+                registry['enable'] = false
+                gitlab_kas['enable'] = false
+                puma['worker_processes'] = 2
+                postgresql['shared_buffers'] = '256MB'
+          ports:
+            - name: http
+              containerPort: 80
+          # First boot runs the full reconfigure + migrations, so give it room.
+          startupProbe:
+            httpGet:
+              path: /-/health
+              port: http
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 120
+          readinessProbe:
+            httpGet:
+              path: /-/health
+              port: http
+            periodSeconds: 15
+            timeoutSeconds: 5
+            failureThreshold: 6
+          resources:
+            requests:
+              cpu: 500m
+              memory: 2Gi
+          volumeMounts:
+            - name: config
+              mountPath: /etc/gitlab
+            - name: data
+              mountPath: /var/opt/gitlab
+            - name: logs
+              mountPath: /var/log/gitlab
+            - name: shm
+              mountPath: /dev/shm
+      volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: gitlab-config
+        - name: data
+          persistentVolumeClaim:
+            claimName: gitlab-data
+        - name: logs
+          emptyDir: {}
+        # PostgreSQL needs more shared memory than the default 64 MiB.
+        - name: shm
+          emptyDir:
+            medium: Memory
+            sizeLimit: 256Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gitlab
+  namespace: gitlab
+spec:
+  selector:
+    app: gitlab
+  ports:
+    - name: http
+      port: 80
+      targetPort: http

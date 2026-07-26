@@ -1,0 +1,13 @@
+# Pushed by scripts/gitlab.sh to the local GitLab project root/ravazque-iot,
+# under manifests/. Argo CD reads it from there instead of GitHub.
+apiVersion: v1
+kind: Service
+metadata:
+  name: playground
+  namespace: dev
+spec:
+  selector:
+    app: playground
+  ports:
+    - port: 8888
+      targetPort: 8888

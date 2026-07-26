@@ -1,0 +1,56 @@
+# app3 - single replica. Default backend for any other Host header.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app3-nginx
+data:
+  # $hostname is the pod name, so every reply says which pod answered.
+  default.conf: |
+    server {
+        listen 80;
+        server_name _;
+        location / {
+            default_type text/html;
+            return 200 "<!DOCTYPE html><html><body><h1>Hello from app3</h1><p>pod: $hostname</p></body></html>";
+        }
+    }
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app3
+  labels:
+    app: app3
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: app3
+  template:
+    metadata:
+      labels:
+        app: app3
+    spec:
+      containers:
+        - name: app3
+          image: nginx:1.27-alpine
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - name: conf
+              mountPath: /etc/nginx/conf.d
+      volumes:
+        - name: conf
+          configMap:
+            name: app3-nginx
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: app3
+spec:
+  selector:
+    app: app3
+  ports:
+    - port: 80
+      targetPort: 80

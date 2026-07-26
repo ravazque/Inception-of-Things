@@ -1,0 +1,13 @@
+# Watched by Argo CD (see ../application.yaml).
+# Exposes the playground app inside the cluster on port 8888.
+apiVersion: v1
+kind: Service
+metadata:
+  name: playground
+  namespace: dev
+spec:
+  selector:
+    app: playground
+  ports:
+    - port: 8888
+      targetPort: 8888

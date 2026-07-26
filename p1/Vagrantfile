@@ -1,0 +1,64 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# Part 1 - Two K3s nodes provisioned with Vagrant.
+#   ravazqueS  (192.168.56.110) -> K3s server  / control-plane
+#   ravazqueSW (192.168.56.111) -> K3s agent    / worker
+
+LOGIN     = "ravazque"
+SERVER_IP = "192.168.56.110"
+WORKER_IP = "192.168.56.111"
+
+# Pre-shared cluster token. Using a known token lets the agent join the
+# server without copying the auto-generated node-token between machines.
+K3S_TOKEN = "iot-ravazque-k3s-token"
+
+Vagrant.configure("2") do |config|
+  # Ubuntu 22.04 image that ships both libvirt and virtualbox builds,
+  # so the same file works with either provider.
+  config.vm.box = "generic/ubuntu2204"
+
+  # Everything the guest needs is uploaded by the provisioners, so the
+  # default shared folder (provider-specific, sometimes needs NFS) is off.
+  config.vm.synced_folder ".", "/vagrant", disabled: true
+
+  # --- Control node -------------------------------------------------------
+  config.vm.define "#{LOGIN}S" do |server|
+    server.vm.hostname = "#{LOGIN}S"
+    server.vm.network "private_network", ip: SERVER_IP
+
+    server.vm.provider "libvirt" do |lv|
+      lv.cpus   = 1
+      lv.memory = 1024
+    end
+    server.vm.provider "virtualbox" do |vb|
+      vb.cpus   = 1
+      vb.memory = 1024
+      vb.name   = "#{LOGIN}S"
+    end
+
+    server.vm.provision "shell",
+      path: "scripts/server.sh",
+      args: [SERVER_IP, K3S_TOKEN]
+  end
+
+  # --- Worker node --------------------------------------------------------
+  config.vm.define "#{LOGIN}SW" do |worker|
+    worker.vm.hostname = "#{LOGIN}SW"
+    worker.vm.network "private_network", ip: WORKER_IP
+
+    worker.vm.provider "libvirt" do |lv|
+      lv.cpus   = 1
+      lv.memory = 1024
+    end
+    worker.vm.provider "virtualbox" do |vb|
+      vb.cpus   = 1
+      vb.memory = 1024
+      vb.name   = "#{LOGIN}SW"
+    end
+
+    worker.vm.provision "shell",
+      path: "scripts/worker.sh",
+      args: [SERVER_IP, WORKER_IP, K3S_TOKEN]
+  end
+end
