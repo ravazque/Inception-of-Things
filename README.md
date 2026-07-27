@@ -171,7 +171,6 @@ Inception_of_Things/
 │
 ├── README.md
 ├── .gitignore
-│
 ├── docs/
 │   └── README.md                   # Condensed project documentation
 │
@@ -181,7 +180,6 @@ Inception_of_Things/
 │   └── scripts/
 │       ├── server.sh               # install K3s in server (control-plane) mode
 │       └── worker.sh               # install K3s agent and join the server
-│
 ├── p2/                             # Part 2 — K3s + 3 apps + Ingress
 │   ├── README.md                   # start / test / stop / destroy
 │   ├── Vagrantfile                 # ravazqueS (.110)
@@ -192,7 +190,6 @@ Inception_of_Things/
 │       ├── app2.yaml               # app2 (3 replicas)
 │       ├── app3.yaml               # app3 (default backend)
 │       └── ingress.yaml            # Host-based routing (Traefik)
-│
 ├── p3/                             # Part 3 — K3d + Argo CD (GitOps)
 │   ├── README.md                   # start / test / v1→v2 / stop / destroy
 │   ├── scripts/
@@ -202,7 +199,6 @@ Inception_of_Things/
 │       └── manifests/              # what Argo CD deploys (the watched path)
 │           ├── deployment.yaml     # wil42/playground — the image tag lives here
 │           └── service.yaml        # port 8888 inside the cluster
-│
 └── bonus/                          # Bonus — local GitLab
     ├── README.md                   # start / test / v1→v2 / stop / destroy
     ├── scripts/

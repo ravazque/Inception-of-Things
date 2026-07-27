@@ -35,16 +35,9 @@ then just run `vagrant up`.
 
 ## Start
 
-### **CachyOS:**
-
 ```bash
-vagrant up --provider=libvirt
-```
-
-### **Ubuntu:**
-
-```bash
-vagrant up --provider=virtualbox
+vagrant up --provider=libvirt      # KVM
+vagrant up --provider=virtualbox   # VirtualBox
 ```
 
 The first run downloads the box and takes a few minutes. Later runs are much
@@ -90,6 +83,11 @@ Shuts the machines down but keeps them on disk:
 
 ```bash
 vagrant halt
+```
+
+## Re-Start
+
+```bash
 vagrant up        # bring them back, no reprovisioning
 ```
 

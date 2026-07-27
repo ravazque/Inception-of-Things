@@ -36,16 +36,9 @@ Vagrant plus one provider. The `Vagrantfile` declares both:
 
 ## Start
 
-### **CachyOS:**
-
 ```bash
-vagrant up --provider=libvirt
-```
-
-### **Ubuntu:**
-
-```bash
-vagrant up --provider=virtualbox
+vagrant up --provider=libvirt      # KVM
+vagrant up --provider=virtualbox   # VirtualBox
 ```
 
 The provisioning uploads `confs/` into the machine, installs K3s, applies the
@@ -87,8 +80,15 @@ then open `http://app1.com`, `http://app2.com` and `http://192.168.56.110`.
 
 ## Stop
 
+Shuts the machine down but keeps it on disk:
+
 ```bash
 vagrant halt
+```
+
+## Re-Start
+
+```bash
 vagrant up        # bring it back, no reprovisioning
 ```
 
