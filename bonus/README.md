@@ -47,7 +47,8 @@ What it does, in order:
 2. Creates (or reuses) the `iot` K3d cluster and the three namespaces.
 3. `scripts/gitlab.sh` — pulls the GitLab image, imports it into the cluster,
    deploys it, waits for it to be healthy, creates an API token, creates the
-   public project `root/Inception-of-Things_ravazque` and pushes `confs/manifests/` into it.
+   public project `root/Inception-of-Things_ravazque` and pushes
+   `confs/manifests/` into it.
 4. `scripts/argocd.sh` — installs Argo CD (or reuses it) and applies the
    Application pointing at the local GitLab.
 
