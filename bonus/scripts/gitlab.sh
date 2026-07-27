@@ -1,15 +1,12 @@
 #!/bin/bash
-# Deploy the local GitLab, then create the public project that Argo CD reads
-# from and push the application manifests into it.
-#
-# Everything is automated through the GitLab API, so no click-through setup is
-# needed: after this script the repository already contains deployment.yaml and
-# service.yaml with the v1 image tag.
+# Deploy the local GitLab, create the public project Argo CD reads from and
+# push the application manifests into it. Driven through the GitLab API, so
+# there is no setup left to do in the web UI.
 set -e
 
 CLUSTER="${CLUSTER:-iot}"
 NS="gitlab"
-PROJECT="ravazque-iot"
+PROJECT="Inception-of-Things_ravazque"
 IMAGE="gitlab/gitlab-ce:latest"
 CONFS="$(cd "$(dirname "$0")/../confs" && pwd)"
 export PATH="${HOME}/.local/bin:${PATH}"

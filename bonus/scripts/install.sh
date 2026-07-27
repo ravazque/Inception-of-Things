@@ -1,9 +1,7 @@
 #!/bin/bash
-# Bonus - Part 3 lab plus a local GitLab as the GitOps source.
-#
-# Runs on the host, exactly like Part 3: one K3d cluster with the namespaces
-# argocd, dev and gitlab. Docker must be available; every other tool is
-# downloaded into ~/.local/bin, so no sudo and no package manager are needed.
+# Bonus - Part 3 plus a local GitLab as the GitOps source.
+# Runs on the host like Part 3: one K3d cluster with the namespaces argocd,
+# dev and gitlab. Docker must be available; the rest goes to ~/.local/bin.
 set -e
 
 CLUSTER="iot"
@@ -57,8 +55,7 @@ if ! command -v argocd >/dev/null 2>&1; then
 fi
 
 # --- cluster ---------------------------------------------------------------
-# The Part 3 cluster is reused when it is already there, so the bonus really is
-# "Part 3 with GitLab" and not a second copy of it.
+# Reuses the Part 3 cluster when it exists, instead of building a second one.
 if k3d cluster list "${CLUSTER}" >/dev/null 2>&1; then
   echo "==> Reusing the existing k3d cluster '${CLUSTER}'"
   k3d cluster start "${CLUSTER}" >/dev/null 2>&1 || true

@@ -4,8 +4,7 @@ kind: ConfigMap
 metadata:
   name: app2-nginx
 data:
-  # $hostname is the pod name: repeat the curl and the Service rotates between
-  # the three replicas, which proves the load balancing.
+  # $hostname is the pod name, so the reply shows which replica answered.
   default.conf: |
     server {
         listen 80;

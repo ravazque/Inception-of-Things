@@ -80,7 +80,7 @@ install scripts create a root API token, create a public project and push the
 manifests into it, then re-point the Argo CD `Application` at the in-cluster
 GitLab URL. The GitOps loop then runs entirely on-premise.
 
-## Key requirements met
+## Summary
 
 - **Part 1** — two VMs, fixed private IPs `.110`/`.111`, hostnames ending in
   `S` and `SW`, passwordless SSH, K3s in server and agent mode, `kubectl`

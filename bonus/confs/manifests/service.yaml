@@ -1,4 +1,4 @@
-# Pushed by scripts/gitlab.sh to the local GitLab project root/ravazque-iot,
+# Pushed by scripts/gitlab.sh to the local GitLab project root/Inception-of-Things_ravazque,
 # under manifests/. Argo CD reads it from there instead of GitHub.
 apiVersion: v1
 kind: Service

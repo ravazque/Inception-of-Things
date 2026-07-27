@@ -1,6 +1,5 @@
-# Argo CD Application - applied to the local cluster, never pushed to Git.
-# It tells Argo CD which repository and path to watch, and where to deploy.
-# Changing the image tag under that path is what triggers a redeploy.
+# Applied to the cluster, not read from Git: it declares which repository and
+# path Argo CD watches, and where it deploys.
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -9,7 +8,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/ravazque/Inception-of-Things.git
+    repoURL: https://github.com/ravazque/Inception-of-Things_ravazque.git
     targetRevision: HEAD
     path: p3/confs/manifests
   destination:

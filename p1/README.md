@@ -35,13 +35,13 @@ then just run `vagrant up`.
 
 ## Start
 
-**CachyOS:**
+### **CachyOS:**
 
 ```bash
 vagrant up --provider=libvirt
 ```
 
-**Ubuntu:**
+### **Ubuntu:**
 
 ```bash
 vagrant up --provider=virtualbox

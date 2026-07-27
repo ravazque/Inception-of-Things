@@ -36,13 +36,13 @@ Vagrant plus one provider. The `Vagrantfile` declares both:
 
 ## Start
 
-**CachyOS:**
+### **CachyOS:**
 
 ```bash
 vagrant up --provider=libvirt
 ```
 
-**Ubuntu:**
+### **Ubuntu:**
 
 ```bash
 vagrant up --provider=virtualbox

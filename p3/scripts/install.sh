@@ -1,8 +1,7 @@
 #!/bin/bash
 # Part 3 - K3d cluster + Argo CD + continuous deployment of the dev app.
-# Runs directly on the host (no Vagrant). Docker must be available; every other
-# tool is downloaded into ~/.local/bin, so no sudo and no package manager
-# are required.
+# Runs on the host, no Vagrant. Docker must be available; the rest is
+# downloaded into ~/.local/bin, so no sudo is required.
 set -e
 
 CLUSTER="iot"
@@ -48,7 +47,7 @@ if ! command -v argocd >/dev/null 2>&1; then
 fi
 
 # --- cluster ---------------------------------------------------------------
-# Recreated from scratch so the demo always starts from a known state.
+# Recreated from scratch, so every run starts from a known state.
 k3d cluster delete "${CLUSTER}" >/dev/null 2>&1 || true
 k3d cluster create "${CLUSTER}" --wait
 
@@ -66,8 +65,7 @@ echo "Waiting for Argo CD to be ready..."
 kubectl -n argocd rollout status deploy/argocd-repo-server --timeout=300s
 kubectl -n argocd rollout status deploy/argocd-server      --timeout=300s
 
-# Register the application. Argo CD then pulls the manifests from the public
-# repo and keeps the dev namespace in sync with it, on its own.
+# From here Argo CD pulls the manifests and keeps the dev namespace in sync.
 kubectl apply -f "${CONFS}/application.yaml"
 
 echo "Waiting for the first sync..."

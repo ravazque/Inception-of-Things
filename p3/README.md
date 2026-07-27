@@ -13,7 +13,7 @@ the application — that is the continuous deployment part.
 | Cluster name | `iot` |
 | Namespaces | `argocd`, `dev` |
 | Application | `wil42/playground`, port `8888`, tags `v1` / `v2` |
-| Source repository | `github.com/ravazque/Inception-of-Things` |
+| Source repository | `github.com/ravazque/Inception-of-Things_ravazque` |
 | Watched path | `p3/confs/manifests/` |
 
 ## Requirements

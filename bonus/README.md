@@ -13,7 +13,7 @@ exists, so it really is "Part 3 plus GitLab" and not a second lab.
 | Cluster name | `iot` (shared with Part 3) |
 | Namespaces | `argocd`, `dev`, `gitlab` |
 | GitLab | `gitlab/gitlab-ce:latest`, one pod, plain HTTP |
-| Repository | `root/ravazque-iot`, public, watched path `manifests/` |
+| Repository | `root/Inception-of-Things_ravazque`, public, watched path `manifests/` |
 | Application | `wil42/playground`, port `8888`, tags `v1` / `v2` |
 
 The whole setup is automated through the GitLab API: the scripts create the
@@ -47,7 +47,7 @@ What it does, in order:
 2. Creates (or reuses) the `iot` K3d cluster and the three namespaces.
 3. `scripts/gitlab.sh` — pulls the GitLab image, imports it into the cluster,
    deploys it, waits for it to be healthy, creates an API token, creates the
-   public project `root/ravazque-iot` and pushes `confs/manifests/` into it.
+   public project `root/Inception-of-Things_ravazque` and pushes `confs/manifests/` into it.
 4. `scripts/argocd.sh` — installs Argo CD (or reuses it) and applies the
    Application pointing at the local GitLab.
 
@@ -68,7 +68,7 @@ Confirm that Argo CD really is reading from GitLab and not from GitHub:
 ```bash
 kubectl -n argocd get application playground \
   -o jsonpath='{.spec.source.repoURL}{"\n"}'
-# http://gitlab.gitlab.svc.cluster.local/root/ravazque-iot.git
+# http://gitlab.gitlab.svc.cluster.local/root/Inception-of-Things_ravazque.git
 ```
 
 GitLab web UI — keep this terminal open:
@@ -103,7 +103,7 @@ TOKEN=$(kubectl -n gitlab get secret gitlab-api-token \
 
 kubectl -n gitlab port-forward svc/gitlab 8081:80 &
 
-git clone "http://oauth2:${TOKEN}@127.0.0.1:8081/root/ravazque-iot.git" /tmp/iot-bonus
+git clone "http://oauth2:${TOKEN}@127.0.0.1:8081/root/Inception-of-Things_ravazque.git" /tmp/iot-bonus
 cd /tmp/iot-bonus
 sed -i 's|playground:v1|playground:v2|' manifests/deployment.yaml
 git commit -am "playground: v2"
@@ -122,8 +122,7 @@ curl http://localhost:8888
 # {"status":"ok", "message": "v2"}
 ```
 
-The same edit can be done from the GitLab web UI, which shows the loop more
-clearly during a demo.
+The same edit can be done from the GitLab web UI.
 
 ## Stop
 

@@ -1,9 +1,6 @@
-# Local GitLab CE, from the official omnibus image published by GitLab.
-# One pod in the "gitlab" namespace runs the whole stack (nginx, workhorse,
-# puma, sidekiq, gitaly, postgresql, redis) supervised inside the container.
-#
-# In-cluster URL: http://gitlab.gitlab.svc.cluster.local
-# That is exactly the URL Argo CD clones from, so no host mismatch is possible.
+# GitLab CE omnibus: one pod runs the whole stack (nginx, puma, sidekiq,
+# gitaly, postgresql, redis). Reachable in-cluster at
+# http://gitlab.gitlab.svc.cluster.local, the URL Argo CD clones from.
 apiVersion: v1
 kind: Secret
 metadata:
@@ -11,8 +8,8 @@ metadata:
   namespace: gitlab
 type: Opaque
 stringData:
-  # Initial password of the "root" user. Lab credentials: GitLab is only
-  # reachable inside the cluster and through kubectl port-forward.
+  # Initial "root" password. Local only: GitLab is not published outside the
+  # cluster, it is reached through kubectl port-forward.
   password: "Iot-Kubernetes-2026"
 ---
 apiVersion: v1
@@ -74,10 +71,10 @@ spec:
                 external_url 'http://gitlab.gitlab.svc.cluster.local'
                 nginx['listen_port'] = 80
                 nginx['listen_https'] = false
-                # Kubernetes probes come from the node IP, not from localhost,
-                # and /-/health is restricted to localhost by default.
+                # Probes come from the node IP, and /-/health is restricted
+                # to localhost by default.
                 gitlab_rails['monitoring_whitelist'] = ['0.0.0.0/0']
-                # Trim the stack to what a single-node lab needs.
+                # Components a single-node setup does not need.
                 prometheus_monitoring['enable'] = false
                 registry['enable'] = false
                 gitlab_kas['enable'] = false

@@ -11,8 +11,11 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: http://gitlab.gitlab.svc.cluster.local/root/ravazque-iot.git
-    targetRevision: HEAD
+    # Project created by scripts/gitlab.sh through the GitLab API.
+    repoURL: http://gitlab.gitlab.svc.cluster.local/root/Inception-of-Things_ravazque.git
+    # Named explicitly: on a repo that was empty until gitlab.sh pushed, HEAD
+    # follows the instance default branch, not necessarily the one pushed.
+    targetRevision: main
     path: manifests
   destination:
     server: https://kubernetes.default.svc

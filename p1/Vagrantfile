@@ -9,17 +9,14 @@ LOGIN     = "ravazque"
 SERVER_IP = "192.168.56.110"
 WORKER_IP = "192.168.56.111"
 
-# Pre-shared cluster token. Using a known token lets the agent join the
-# server without copying the auto-generated node-token between machines.
+# Shared token: lets the agent join without copying the node-token file.
 K3S_TOKEN = "iot-ravazque-k3s-token"
 
 Vagrant.configure("2") do |config|
-  # Ubuntu 22.04 image that ships both libvirt and virtualbox builds,
-  # so the same file works with either provider.
+  # Ships libvirt and virtualbox builds, so either provider works.
   config.vm.box = "generic/ubuntu2204"
 
-  # Everything the guest needs is uploaded by the provisioners, so the
-  # default shared folder (provider-specific, sometimes needs NFS) is off.
+  # Not needed: the provisioners upload everything the guest uses.
   config.vm.synced_folder ".", "/vagrant", disabled: true
 
   # --- Control node -------------------------------------------------------

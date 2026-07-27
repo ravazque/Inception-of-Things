@@ -169,17 +169,21 @@ k3d cluster delete iot          # remove
 ```
 Inception_of_Things/
 │
-├── README.md                       # GitHub project overview (this file)
+├── README.md
 ├── .gitignore
 │
 ├── docs/
-│   └── README.md                   # Simple project documentation
+│   └── README.md                   # Condensed project documentation
+│
 ├── p1/                             # Part 1 — K3s + Vagrant (2 nodes)
+│   ├── README.md                   # start / test / stop / destroy
 │   ├── Vagrantfile                 # ravazqueS (.110) + ravazqueSW (.111)
 │   └── scripts/
 │       ├── server.sh               # install K3s in server (control-plane) mode
 │       └── worker.sh               # install K3s agent and join the server
+│
 ├── p2/                             # Part 2 — K3s + 3 apps + Ingress
+│   ├── README.md                   # start / test / stop / destroy
 │   ├── Vagrantfile                 # ravazqueS (.110)
 │   ├── scripts/
 │   │   └── setup.sh                # K3s server + apply the manifests
@@ -188,7 +192,9 @@ Inception_of_Things/
 │       ├── app2.yaml               # app2 (3 replicas)
 │       ├── app3.yaml               # app3 (default backend)
 │       └── ingress.yaml            # Host-based routing (Traefik)
+│
 ├── p3/                             # Part 3 — K3d + Argo CD (GitOps)
+│   ├── README.md                   # start / test / v1→v2 / stop / destroy
 │   ├── scripts/
 │   │   └── install.sh              # k3d cluster + namespaces + Argo CD + Application
 │   └── confs/
@@ -196,7 +202,9 @@ Inception_of_Things/
 │       └── manifests/              # what Argo CD deploys (the watched path)
 │           ├── deployment.yaml     # wil42/playground — the image tag lives here
 │           └── service.yaml        # port 8888 inside the cluster
+│
 └── bonus/                          # Bonus — local GitLab
+    ├── README.md                   # start / test / v1→v2 / stop / destroy
     ├── scripts/
     │   ├── install.sh              # tools + k3d cluster + namespaces
     │   ├── gitlab.sh               # deploy GitLab, create the project, push manifests
@@ -208,6 +216,9 @@ Inception_of_Things/
             ├── deployment.yaml
             └── service.yaml
 ```
+
+`p1` deploys no application, so it carries no `confs/`; the bonus runs on the
+host with K3d, so it carries no `Vagrantfile`.
 
 <br>
 
