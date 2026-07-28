@@ -14,7 +14,7 @@ the application — that is the continuous deployment part.
 | Namespaces | `argocd`, `dev` |
 | Application | `wil42/playground`, port `8888`, tags `v1` / `v2` |
 | Source repository | `github.com/ravazque/Inception-of-Things_ravazque` |
-| Watched path | `p3/confs/manifests/` |
+| Watched path | `srcs/p3/confs/manifests/` |
 
 ## Requirements
 
@@ -78,11 +78,12 @@ kubectl -n argocd get secret argocd-initial-admin-secret \
 
 ### Continuous deployment: v1 → v2
 
-Change the image tag in this repository and push it:
+Change the image tag in this repository and push it — paths below are relative
+to the repository root:
 
 ```bash
-sed -i 's|playground:v1|playground:v2|' p3/confs/manifests/deployment.yaml
-git add p3/confs/manifests/deployment.yaml
+sed -i 's|playground:v1|playground:v2|' srcs/p3/confs/manifests/deployment.yaml
+git add srcs/p3/confs/manifests/deployment.yaml
 git commit -m "playground: v2"
 git push
 ```

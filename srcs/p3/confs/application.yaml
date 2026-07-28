@@ -10,7 +10,7 @@ spec:
   source:
     repoURL: https://github.com/ravazque/Inception-of-Things_ravazque.git
     targetRevision: HEAD
-    path: p3/confs/manifests
+    path: srcs/p3/confs/manifests
   destination:
     server: https://kubernetes.default.svc
     namespace: dev

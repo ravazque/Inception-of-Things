@@ -9,8 +9,8 @@ complete **GitOps** pipeline, using **K3s**, **K3d** and **Argo CD**, plus a
 local **GitLab** in the bonus.
 
 The project is split into three mandatory parts and one bonus, each in its own
-folder at the root of the repository (`p1`, `p2`, `p3`, `bonus`). Every part is
-self-contained and can be brought up from scratch with a single command.
+folder under `srcs/` (`srcs/p1`, `srcs/p2`, `srcs/p3`, `srcs/bonus`). Every part
+is self-contained and can be brought up from scratch with a single command.
 Parts 1 and 2 run in virtual machines: the guest OS is **Ubuntu 22.04** and the
 `Vagrantfile`s work with both the **libvirt/KVM** and **VirtualBox** providers.
 Part 3 and the bonus need no virtual machine at all — they run on Docker, and
@@ -64,7 +64,7 @@ required**.
 ### Part 1 — K3s and Vagrant
 
 ```bash
-cd p1
+cd srcs/p1
 vagrant up --provider=libvirt                       # or --provider=virtualbox
 vagrant ssh ravazqueS -c "kubectl get nodes -o wide"   # both nodes Ready
 vagrant destroy -f
@@ -73,7 +73,7 @@ vagrant destroy -f
 ### Part 2 — three apps behind an Ingress
 
 ```bash
-cd p2
+cd srcs/p2
 vagrant up --provider=libvirt
 curl -H "Host: app1.com" http://192.168.56.110      # Hello from app1
 curl -H "Host: app2.com" http://192.168.56.110      # Hello from app2
@@ -85,13 +85,13 @@ vagrant destroy -f
 ### Part 3 — K3d + Argo CD
 
 ```bash
-cd p3
+cd srcs/p3
 ./scripts/install.sh                # k3d cluster + Argo CD + Application
 kubectl get ns                      # argocd + dev
 kubectl get application -n argocd   # Synced / Healthy
 kubectl -n dev port-forward svc/playground 8888:8888 &
 curl http://localhost:8888          # {"status":"ok", "message": "v1"}
-# bump the tag in p3/confs/manifests/deployment.yaml and push
+# bump the tag in srcs/p3/confs/manifests/deployment.yaml and push
 # -> Argo CD redeploys -> curl returns v2
 k3d cluster delete iot
 ```
@@ -100,7 +100,7 @@ k3d cluster delete iot
 
 ```bash
 # free memory first: destroy the p1/p2 machines
-cd bonus
+cd srcs/bonus
 ./scripts/install.sh                # heavy: GitLab CE is a ~3.5 GB image
 kubectl get ns                      # argocd + dev + gitlab
 kubectl -n gitlab get pods          # gitlab Running 1/1
@@ -171,50 +171,55 @@ Inception_of_Things/
 │
 ├── README.md
 ├── .gitignore
-├── docs/
-│   └── README.md                   # Condensed project documentation
 │
-├── p1/                             # Part 1 — K3s + Vagrant (2 nodes)
-│   ├── README.md                   # start / test / stop / destroy
-│   ├── Vagrantfile                 # ravazqueS (.110) + ravazqueSW (.111)
-│   └── scripts/
-│       ├── server.sh               # install K3s in server (control-plane) mode
-│       └── worker.sh               # install K3s agent and join the server
-├── p2/                             # Part 2 — K3s + 3 apps + Ingress
-│   ├── README.md                   # start / test / stop / destroy
-│   ├── Vagrantfile                 # ravazqueS (.110)
-│   ├── scripts/
-│   │   └── setup.sh                # K3s server + apply the manifests
-│   └── confs/
-│       ├── app1.yaml               # app1 (1 replica)
-│       ├── app2.yaml               # app2 (3 replicas)
-│       ├── app3.yaml               # app3 (default backend)
-│       └── ingress.yaml            # Host-based routing (Traefik)
-├── p3/                             # Part 3 — K3d + Argo CD (GitOps)
-│   ├── README.md                   # start / test / v1→v2 / stop / destroy
-│   ├── scripts/
-│   │   └── install.sh              # k3d cluster + namespaces + Argo CD + Application
-│   └── confs/
-│       ├── application.yaml        # Argo CD Application (repo, path, destination)
-│       └── manifests/              # what Argo CD deploys (the watched path)
-│           ├── deployment.yaml     # wil42/playground — the image tag lives here
-│           └── service.yaml        # port 8888 inside the cluster
-└── bonus/                          # Bonus — local GitLab
-    ├── README.md                   # start / test / v1→v2 / stop / destroy
-    ├── scripts/
-    │   ├── install.sh              # tools + k3d cluster + namespaces
-    │   ├── gitlab.sh               # deploy GitLab, create the project, push manifests
-    │   └── argocd.sh               # install Argo CD + Application (GitLab source)
-    └── confs/
-        ├── gitlab.yaml             # root Secret + PVCs + Deployment + Service (GitLab CE)
-        ├── application.yaml        # Argo CD Application (local GitLab source)
-        └── manifests/              # pushed into the GitLab project
-            ├── deployment.yaml
-            └── service.yaml
+├── docs/
+│   └── README.md                       # Condensed project documentation
+│
+└── srcs/                               # All the project sources
+    │
+    ├── p1/                             # Part 1 — K3s + Vagrant (2 nodes)
+    │   ├── README.md                   # start / test / stop / destroy
+    │   ├── Vagrantfile                 # ravazqueS (.110) + ravazqueSW (.111)
+    │   └── scripts/
+    │       ├── server.sh               # install K3s in server (control-plane) mode
+    │       └── worker.sh               # install K3s agent and join the server
+    ├── p2/                             # Part 2 — K3s + 3 apps + Ingress
+    │   ├── README.md                   # start / test / stop / destroy
+    │   ├── Vagrantfile                 # ravazqueS (.110)
+    │   ├── scripts/
+    │   │   └── setup.sh                # K3s server + apply the manifests
+    │   └── confs/
+    │       ├── app1.yaml               # app1 (1 replica)
+    │       ├── app2.yaml               # app2 (3 replicas)
+    │       ├── app3.yaml               # app3 (default backend)
+    │       └── ingress.yaml            # Host-based routing (Traefik)
+    ├── p3/                             # Part 3 — K3d + Argo CD (GitOps)
+    │   ├── README.md                   # start / test / v1→v2 / stop / destroy
+    │   ├── scripts/
+    │   │   └── install.sh              # k3d cluster + namespaces + Argo CD + Application
+    │   └── confs/
+    │       ├── application.yaml        # Argo CD Application (repo, path, destination)
+    │       └── manifests/              # what Argo CD deploys (the watched path)
+    │           ├── deployment.yaml     # wil42/playground — the image tag lives here
+    │           └── service.yaml        # port 8888 inside the cluster
+    └── bonus/                          # Bonus — local GitLab
+        ├── README.md                   # start / test / v1→v2 / stop / destroy
+        ├── scripts/
+        │   ├── install.sh              # tools + k3d cluster + namespaces
+        │   ├── gitlab.sh               # deploy GitLab, create the project, push manifests
+        │   └── argocd.sh               # install Argo CD + Application (GitLab source)
+        └── confs/
+            ├── gitlab.yaml             # root Secret + PVCs + Deployment + Service (GitLab CE)
+            ├── application.yaml        # Argo CD Application (local GitLab source)
+            └── manifests/              # pushed into the GitLab project
+                ├── deployment.yaml
+                └── service.yaml
 ```
 
 `p1` deploys no application, so it carries no `confs/`; the bonus runs on the
-host with K3d, so it carries no `Vagrantfile`.
+host with K3d, so it carries no `Vagrantfile`. The Argo CD `Application` of
+Part 3 watches `srcs/p3/confs/manifests/` inside this repository, so moving that
+folder means updating `path:` in `srcs/p3/confs/application.yaml`.
 
 <br>
 

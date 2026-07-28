@@ -1,4 +1,4 @@
-*Created by ravazque, luferna3 and jorbarro.*
+*This project has been created as part of the 42 curriculum by ravazque, luferna3 and jorbarro.*
 
 ---
 
@@ -13,19 +13,21 @@ journey into **Kubernetes**, from provisioning virtual machines with
 
 ```
 .
-├── p1/      Vagrantfile · scripts/            # K3s + Vagrant (2 nodes)
-├── p2/      Vagrantfile · scripts/ · confs/   # K3s + 3 apps + Ingress
-├── p3/      scripts/ · confs/manifests/       # K3d + Argo CD (GitOps)
-└── bonus/   scripts/ · confs/manifests/       # K3d + Argo CD + local GitLab
+├── docs/    README.md                              # this document
+└── srcs/
+    ├── p1/      Vagrantfile · scripts/             # K3s + Vagrant (2 nodes)
+    ├── p2/      Vagrantfile · scripts/ · confs/    # K3s + 3 apps + Ingress
+    ├── p3/      scripts/ · confs/manifests/        # K3d + Argo CD (GitOps)
+    └── bonus/   scripts/ · confs/manifests/        # K3d + Argo CD + local GitLab
 ```
 
 Each part is self-contained and ships its own README with the exact commands to
 **start, test, stop and destroy** it:
 
-- [`p1/README.md`](../p1/README.md) — Part 1: K3s + Vagrant (two nodes)
-- [`p2/README.md`](../p2/README.md) — Part 2: K3s + three apps + Ingress
-- [`p3/README.md`](../p3/README.md) — Part 3: K3d + Argo CD (GitOps)
-- [`bonus/README.md`](../bonus/README.md) — Bonus: local GitLab
+- [`srcs/p1/README.md`](../srcs/p1/README.md) — Part 1: K3s + Vagrant (two nodes)
+- [`srcs/p2/README.md`](../srcs/p2/README.md) — Part 2: K3s + three apps + Ingress
+- [`srcs/p3/README.md`](../srcs/p3/README.md) — Part 3: K3d + Argo CD (GitOps)
+- [`srcs/bonus/README.md`](../srcs/bonus/README.md) — Bonus: local GitLab
 
 ## Stack
 
